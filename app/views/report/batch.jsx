@@ -91,7 +91,7 @@ const Index=props=>{
     <Table
       size="small"
       bordered
-      columns={columns(page.current,handleEdit,handleDelete)}
+      columns={columns(page.current/* ,handleEdit,handleDelete */)}
       dataSource={table?.data?.records}
       loading={!table}
       rowKey="id"

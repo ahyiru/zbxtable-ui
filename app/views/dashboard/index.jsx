@@ -205,7 +205,7 @@ const Index=props=>{
   const refresh=delay=>{
     clearInterval(timer);
     setRefreshText(delay.label);
-    if(delay){
+    if(delay.value){
       timer=setInterval(()=>{
         updateWarningList();
       },delay.value);
