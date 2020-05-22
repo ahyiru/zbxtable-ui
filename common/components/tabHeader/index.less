@@ -1,0 +1,68 @@
+@color:#40a9ff;
+.clearfloat{
+  zoom:1;
+  &::after{
+    clear:both;
+    content:'';
+    display:block;
+    height:0;
+    visibility:hidden;
+  }
+}
+.tabs-header{
+  .clearfloat;
+  position:relative;
+  display:block;
+  border-bottom:3px solid rgba(0,0,0,0.06);
+  user-select:none;
+  &.flex{
+    display:flex;
+    .th-item{
+      flex:1;
+    }
+  }
+  .th-item{
+    display:block;
+    float:left;
+    position:relative;
+    cursor:pointer;
+    border-right:1px solid transparent;
+    // margin-right:4px;
+    margin-right:10px;
+    // 本溢出显示省略号
+    // overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    &:last-of-type{
+      border:0;
+      margin-right:0;
+    }
+    &:hover{
+      color:@color;
+    }
+    &.active{
+      color:@color;
+    }
+  }
+  .th-track{
+    height:3px;
+    position:absolute;
+    left:0;
+    bottom:-3px;
+    color:@color;
+    background-color:currentColor;
+    transition:all .3s;
+    z-index:9;
+    &::after{
+      content:'';
+      position:absolute;
+      width:0;
+      height:0;
+      top:100%;
+      left:50%;
+      transform:translateX(-50%);
+      border:4px solid transparent;
+      border-top-color:currentColor;
+    }
+  }
+}
