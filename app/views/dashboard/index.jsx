@@ -1,6 +1,6 @@
 import React,{useEffect,useCallback,useRef,useState} from 'react';
 import { Button, Table, Tooltip, message,Row,Col,Tabs,Badge,Menu,Dropdown } from 'antd';
-import { CloudServerOutlined,BarChartOutlined,ConsoleSqlOutlined,AlertOutlined,RedoOutlined } from '@ant-design/icons';
+import { CloudServerOutlined,BarChartOutlined,BugOutlined,AlertOutlined,RedoOutlined } from '@ant-design/icons';
 import {use} from '@common';
 const {useAsync}=use;
 import {utils} from '@common';
