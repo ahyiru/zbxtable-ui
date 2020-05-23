@@ -30,7 +30,7 @@ const cardList=[
   {
     key:'problems',
     label:'触发器',
-    icon:<ConsoleSqlOutlined style={{color:'#ffc53d'}} />,
+    icon:<BugOutlined style={{color:'#ffc53d'}} />,
     color:'#ffc53d',
   },
   {
