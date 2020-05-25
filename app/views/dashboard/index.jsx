@@ -86,7 +86,7 @@ const columns=(page,handleItemEdit,handleItemDel)=>[
     width: 40,
     ellipsis: true,
     render:(text,row,index)=>{
-      const t=formatTime(new Date(text-0));
+      const t=formatTime(new Date(text*1000-0));
       return <Tooltip title={t}>{t}</Tooltip>;
     },
   },

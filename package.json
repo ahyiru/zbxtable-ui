@@ -10,6 +10,7 @@
   "scripts": {
     "start": "nodemon scripts/index.js --watch scripts/index.js",
     "build": "webpack --config scripts/webpack.production.js --progress",
+    "server": "nodemon scripts/server.js --watch scripts/server.js",
     "analyze": "ANALYZE=1 webpack --config scripts/webpack.production.js --progress",
     "test": "jest --colors --coverage",
     "lint": "eslint app/**/*.{js,jsx}"
