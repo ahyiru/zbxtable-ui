@@ -43,6 +43,14 @@ const apis={
       url:'/graph',
       method:'post',
     },
+    graph1:id=>({
+      url:`/graph/${id}`,
+      method:'post',
+    }),
+    expGraph:{
+      url:'/graph/exp',
+      method:'post',
+    },
   },
   report:{
     history:{
@@ -61,6 +69,14 @@ const apis={
   alarm:{
     alarm:{
       url:'/alarm',
+    },
+    expAlarm:{
+      url:'/alarm/export',
+      method:'post',
+    },
+    analysis:{
+      url:'/alarm/analysis',
+      method:'post',
     },
   },
   system:{

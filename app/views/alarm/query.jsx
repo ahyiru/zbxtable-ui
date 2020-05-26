@@ -1,11 +1,11 @@
 import React,{useEffect,useCallback,useRef,useState} from 'react';
 import { Button, Table, Tooltip, message,Input,Tag, DatePicker } from 'antd';
-import { EditOutlined,DeleteOutlined,PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { EditOutlined,DeleteOutlined,PlusOutlined, SearchOutlined,DownloadOutlined } from '@ant-design/icons';
 import {use} from '@common';
 const {useAsync}=use;
 import {utils} from '@common';
-const {formatTime}=utils;
-import {getAlarm} from '@app/api/api';
+const {formatTime,dlfile}=utils;
+import {getAlarm,exportAlarm} from '@app/api/api';
 
 import moment from 'moment';
 
@@ -131,6 +131,18 @@ const Index=props=>{
       ...page.current,
     });
   };
+  const expAlarm=async ()=>{
+    const {result,fileInfo}=await exportAlarm({
+      ...searchValue,
+      ...page.current,
+    });
+    if(result){
+      console.log(23321,result);
+      const name=fileInfo.split(';')[1]?.split('=')[1]??'data.xlsx';
+      dlfile(result,name);
+      message.success('导出成功！');
+    }
+  };
   /* const handleEdit=async item=>{
     const {data,msg}=await editItem(item);
     message.success(msg);
@@ -144,11 +156,12 @@ const Index=props=>{
   const {table}=list;
   const tableList=table?.data??{};
   const {items,total}=tableList;
-  return <div className="host-list-page">
+  return <div className="alarm-analysis-page">
     <div className="search-bar">
       {/* <Search placeholder="请输入主机名" onSearch={searchList} enterButton style={{width:'200px',marginRight:'15px'}} /> */}
       <RangePicker showTime value={[moment(searchValue.begin),moment(searchValue.end)]} onChange={(moment,str)=>setSearchValue({begin:str[0],end:str[1]})} style={{marginRight:'15px'}} />
       <Button type="primary" onClick={()=>update({...page.current,...searchValue})} icon={<SearchOutlined />}>查询</Button>
+      <Button style={{marginLeft:12}} onClick={()=>expAlarm()} icon={<DownloadOutlined />}>导出</Button>
     </div>
     <div className="table-wrap">
       <Table

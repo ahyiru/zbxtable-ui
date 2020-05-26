@@ -1,15 +1,19 @@
 import React,{useEffect,useCallback,useRef,useState} from 'react';
-import { Button, Table, Tooltip, message,Input,Tag, DatePicker } from 'antd';
+import { Button, Table, Tooltip, message,Input,Tag, DatePicker,Row,Col } from 'antd';
 import { EditOutlined,DeleteOutlined,PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import {use} from '@common';
 const {useAsync}=use;
 import {utils} from '@common';
 const {formatTime}=utils;
-import {getAlarm} from '@app/api/api';
+import {listAnalysis} from '@app/api/api';
 
 import moment from 'moment';
 
+import ReactEcharts from 'echarts-for-react';
+
 import './index1.less';
+
+import {option,option1} from './charts';
 
 const {Search}=Input;
 
@@ -108,27 +112,28 @@ const columns=(page,handler={})=>[
   }, */
 ];
 
+const initDate=new Date();
+
 const Index=props=>{
   const [list,updateList]=useAsync({});
-  const initDate=new Date();
   const [searchValue,setSearchValue]=useState({
     begin:formatTime(new Date(initDate-1000*60*60*24*7)),
     end:formatTime(initDate),
   });
   // const page=useRef({current:1,size:10});
   const page=useRef({page:1,limit:10});
-  const update=useCallback(params=>updateList({table:getAlarm(params)}),[]);
+  const update=useCallback(params=>updateList({analysis:listAnalysis(params)}),[]);
   useEffect(()=>{
     update({
       ...searchValue,
-      ...page.current,
+      // ...page.current,
     });
   },[]);
   const pageChange=(current,size)=>{
     page.current={page:current,limit:size};
     update({
       ...searchValue,
-      ...page.current,
+      // ...page.current,
     });
   };
   /* const handleEdit=async item=>{
@@ -141,34 +146,25 @@ const Index=props=>{
     message.success(msg);
     update(page.current);
   }; */
-  const {table}=list;
-  const tableList=table?.data??{};
-  const {items,total}=tableList;
-  return <div className="host-list-page">
+  const {analysis}=list;
+  const analysisList=analysis?.data??{};
+  const {host,host_count,level,level_count}=analysisList;
+  const time=`${searchValue.begin}至${searchValue.end}`;
+  return <div className="alarm-analysis-page">
     <div className="search-bar">
       {/* <Search placeholder="请输入主机名" onSearch={searchList} enterButton style={{width:'200px',marginRight:'15px'}} /> */}
       <RangePicker showTime value={[moment(searchValue.begin),moment(searchValue.end)]} onChange={(moment,str)=>setSearchValue({begin:str[0],end:str[1]})} style={{marginRight:'15px'}} />
-      <Button type="primary" onClick={()=>update({...page.current,...searchValue})} icon={<SearchOutlined />}>查询</Button>
+      <Button type="primary" onClick={()=>update({...searchValue})} icon={<SearchOutlined />}>查询</Button>
     </div>
     <div className="table-wrap">
-      <Table
-        pagination={{
-          onShowSizeChange:(current,size)=>pageChange(current,size),
-          onChange:(current,size)=>pageChange(current,size),
-          showSizeChanger: true,
-          showQuickJumper: true,
-          total:total||0,
-          current:page.current.page,
-          pageSize:page.current.limit,
-          pageSizeOptions:['10','20','30','40'],
-        }}
-        size="small"
-        bordered
-        columns={columns(page.current/* ,{handleEdit,handleDelete} */)}
-        dataSource={items}
-        loading={table?.pending}
-        rowKey="id"
-      />
+      <Row gutter={12}>
+        <Col span={12}>
+          <ReactEcharts className="charts-pannel" option={option({legend:level,data:level_count,time})} />
+        </Col>
+        <Col span={12}>
+          <ReactEcharts className="charts-pannel" option={option1({legend:host,data:host_count,time})} />
+        </Col>
+      </Row>
     </div>
   </div>;
 };

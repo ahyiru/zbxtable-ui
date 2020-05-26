@@ -21,6 +21,10 @@ const handler=response=>response.json().then(result=>{
 });
 
 const dlHandler=response=>{
+  if(response.status!==200){
+    message.error(response.statusText);
+    throw {message:response.statusText};
+  }
   const disposition=response.headers.get('Content-Disposition');
   // const filename=decodeURIComponent(disposition.split(';')[1].split('=')[1]);
   const fileInfo=decodeURIComponent(disposition);

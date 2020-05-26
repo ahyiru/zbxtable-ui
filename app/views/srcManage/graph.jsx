@@ -1,14 +1,18 @@
 import React,{useEffect,useCallback,useRef,useState} from 'react';
-import { Button, Table, Tooltip, message,Input,Tag,Tree,Spin } from 'antd';
-import { EditOutlined,DeleteOutlined,PlusOutlined } from '@ant-design/icons';
-import {use} from '@common';
+import { Button, Table, Tooltip, message,Input,Tag,Tree,Spin,DatePicker,Row,Col } from 'antd';
+import { EditOutlined,DeleteOutlined,PlusOutlined,SearchOutlined,DownloadOutlined } from '@ant-design/icons';
+import {use,utils} from '@common';
 const {useAsync,useSearch}=use;
-import {listGraph,getList} from '@app/api/api';
+const {updateId,unique,formatTime,dlfile}=utils;
+import {listGraph,listGraph1,getList,exportGraph} from '@app/api/api';
+
+import moment from 'moment';
 
 import './index.less';
 
 const {Search}=Input;
 const {TreeNode}=Tree;
+const { RangePicker } = DatePicker;
 
 const columns=(page,handler={})=>[
   {
@@ -91,23 +95,29 @@ const columns=(page,handler={})=>[
 
 const renderTree=(tree,childKey='children')=>tree.map(item=>{
   if(item[childKey]&&item[childKey].length){
-    return <TreeNode key={item.groupid} title={item.name} item={item}>
+    return <TreeNode key={item.fuckId} title={item.name} item={item} selectable={!item.groupid}>
       {renderTree(item[childKey],childKey)}
     </TreeNode>;
   }
-  return <TreeNode key={item.hostid} title={item.name} item={item} />;
+  return <TreeNode key={item.fuckId} title={item.name} item={item} selectable={!item.groupid} />;
 });
+
+const initDate=new Date();
 
 const Index=props=>{
   const [list,updateList]=useAsync({});
-  const [searchValue,setSearchValue]=useState({});
   const [filterTree, setFilterTree]=useSearch(null);
   const [checkedKeys,setCheckedKeys]=useState([]);
+  const [searchValue,setSearchValue]=useState({
+    begin:formatTime(new Date(initDate-1000*60*60*24*7)),
+    end:formatTime(initDate),
+  });
+  const selHost=useRef([]);
   // const page=useRef({current:1,size:10});
   const page=useRef({page:1,limit:10});
   const update=useCallback(params=>updateList({table:listGraph(params)}),[]);
   useEffect(()=>{
-    update(page.current);
+    // update(page.current);
   },[]);
   useEffect(()=>{
     updateList({treeList:getList()});
@@ -125,15 +135,35 @@ const Index=props=>{
     update({...page.current,...values});
   };
   const searchTree=value=>{
-    if(!value){
-      return;
-    }
     const treeData=list?.treeList.data.items;
-    setFilterTree(treeData,value);
+    setFilterTree(treeData,value,'name','hosts');
   };
-  const onTreeCheck=checkedKeys=>{
-    console.log(55,checkedKeys);
-    setCheckedKeys(checkedKeys);
+  const onTreeCheck=(keys,node)=>{
+    const selNodes=node.checkedNodes.map(v=>v.item).filter(v=>v.hostid).map(v=>v.hostid);
+    selHost.current=unique(selNodes);
+    setCheckedKeys(keys);
+  };
+  const onSelect=(keys,node)=>{
+    const {item}=node.node;
+    console.log(66,item);
+    updateList({
+      graph:listGraph1({
+        period:[searchValue.begin,searchValue.end],
+        hostid:item.hostid,
+      }),
+    });
+  };
+  const expGraph=async ()=>{
+    const {result,fileInfo}=await exportGraph({
+      period:[searchValue.begin,searchValue.end],
+      hostids:selHost.current,
+    });
+    if(result){
+      console.log(23321,result);
+      const name=fileInfo.split(';')[1]?.split('=')[1]??'data.xlsx';
+      dlfile(result,name);
+      message.success('导出成功！');
+    }
   };
   /* const handleEdit=async item=>{
     const {data,msg}=await editItem(item);
@@ -145,14 +175,16 @@ const Index=props=>{
     message.success(msg);
     update(page.current);
   }; */
-  const {table,treeList}=list;
-  const tableList=table?.data??{};
-  const {items,total}=tableList;
+  const {graph,treeList}=list;
+  const graphList=graph?.data??{};
+  const {items,total}=graphList;
 
   const tree=treeList?.data?.items??[];
   const treeData=filterTree||tree;
 
-  console.log(22,treeList);
+  const tree1=updateId(treeData,'hosts');
+
+  console.log(22,tree1);
 
   return <div className="tree-table-layout">
     <div className="left-tree">
@@ -162,38 +194,31 @@ const Index=props=>{
           checkable
           // defaultExpandedKeys={['root-key']}
           onCheck={onTreeCheck}
+          onSelect={onSelect}
           checkedKeys={checkedKeys}
           key="id"
           className="left-tree-style"
         >
-          {renderTree(treeData,'hosts')}
+          {renderTree(tree1,'hosts')}
         </Tree>
       </Spin>
     </div>
     <div className="right-table">
       <div className="search-bar">
-        <Search placeholder="请输入主机名" allowClear onSearch={searchList} enterButton style={{width:'200px',marginRight:'15px'}} />
-        <Button type="primary" /* onClick={()=>handleEdit()} */ icon={<PlusOutlined />}>添加主机</Button>
+        <RangePicker showTime value={[moment(searchValue.begin),moment(searchValue.end)]} onChange={(moment,str)=>setSearchValue({begin:str[0],end:str[1]})} style={{marginRight:'15px'}} />
+        <Button type="primary" onClick={()=>update({...page.current,...searchValue})} icon={<SearchOutlined />}>查询</Button>
+        <Button style={{marginLeft:12}} onClick={()=>expGraph()} icon={<DownloadOutlined />}>导出</Button>
       </div>
       <div className="table-wrap">
-        <Table
-          pagination={{
-            onShowSizeChange:(current,size)=>pageChange(current,size),
-            onChange:(current,size)=>pageChange(current,size),
-            showSizeChanger:true,
-            showQuickJumper:true,
-            total:total||0,
-            current:page.current.page,
-            pageSize:page.current.limit,
-            pageSizeOptions:['10','20','30','40'],
-          }}
-          size="small"
-          bordered
-          columns={columns(page.current/* ,{handleEdit,handleDelete} */)}
-          dataSource={items}
-          loading={table?.pending}
-          rowKey="id"
-        />
+        <Row gutter={[12,12]}>
+          {
+            (items||[]).map(v=><Col key={v.graphid} lg={12} xl={8}>
+              <div className="img-container">
+                <img src={v.graphid} alt={v.name} />
+              </div>
+            </Col>)
+          }
+        </Row>
       </div>
     </div>
   </div>;

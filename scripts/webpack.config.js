@@ -181,6 +181,15 @@ module.exports={
           enforce:true,
           priority:15,
         },
+        echarts: {
+          idHint:'echarts',
+          chunks:'all',
+          priority:20,
+          test: function(module){
+            const context = module.context;
+            return context && (context.indexOf('echarts') >= 0 || context.indexOf('zrender') >= 0);
+          },
+        },
       },
     },
     // runtimeChunk:true,

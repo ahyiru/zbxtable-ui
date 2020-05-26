@@ -3,9 +3,9 @@ import apis from './pro2';
 
 const {
   dashboard:{login,info,index,trigger,logout},
-  host:{host,host_groups,template,list,subList,target,graph},
+  host:{host,host_groups,template,list,subList,target,graph,graph1,expGraph},
   report:{history,trend,inspect},
-  alarm:{alarm},
+  alarm:{alarm,expAlarm,analysis},
   system:{license,chpwd},
 }=apis;
 
@@ -32,9 +32,13 @@ export const getSubList=params=>{
   return fetcher({...subList(id),params:rest});
 };
 
+export const exportGraph=data=>dlApi({...expGraph,data});
+
 export const listTarget=data=>fetcher({...target,data});
 
 export const listGraph=data=>fetcher({...graph,data});
+
+export const listGraph1=data=>fetcher({...graph1(data.hostid),data});
 
 export const exportHistory=data=>dlApi({...history,data});
 
@@ -43,6 +47,10 @@ export const exportTrend=data=>dlApi({...trend,data});
 export const exportInspect=data=>dlApi({...inspect,data});
 
 export const getAlarm=params=>fetcher({...alarm,params});
+
+export const exportAlarm=data=>dlApi({...expAlarm,data});
+
+export const listAnalysis=data=>fetcher({...analysis,data});
 
 export const getLicense=params=>fetcher({...license,params});
 
