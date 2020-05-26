@@ -108,6 +108,7 @@ const Index=props=>{
   const [list,updateList]=useAsync({});
   const [filterTree, setFilterTree]=useSearch(null);
   const [checkedKeys,setCheckedKeys]=useState([]);
+  const [selected,setSelected]=useState({});
   const [searchValue,setSearchValue]=useState({
     begin:formatTime(new Date(initDate-1000*60*60*24*7)),
     end:formatTime(initDate),
@@ -115,7 +116,7 @@ const Index=props=>{
   const selHost=useRef([]);
   // const page=useRef({current:1,size:10});
   const page=useRef({page:1,limit:10});
-  const update=useCallback(params=>updateList({table:listGraph(params)}),[]);
+  const update=useCallback(params=>updateList({graph:listGraph1(params)}),[]);
   useEffect(()=>{
     // update(page.current);
   },[]);
@@ -146,11 +147,16 @@ const Index=props=>{
   const onSelect=(keys,node)=>{
     const {item}=node.node;
     console.log(66,item);
-    updateList({
+    setSelected(item);
+    /* updateList({
       graph:listGraph1({
         period:[searchValue.begin,searchValue.end],
         hostid:item.hostid,
       }),
+    }); */
+    update({
+      period:[searchValue.begin,searchValue.end],
+      hostid:item.hostid,
     });
   };
   const expGraph=async ()=>{
@@ -206,7 +212,7 @@ const Index=props=>{
     <div className="right-table">
       <div className="search-bar">
         <RangePicker showTime value={[moment(searchValue.begin),moment(searchValue.end)]} onChange={(moment,str)=>setSearchValue({begin:str[0],end:str[1]})} style={{marginRight:'15px'}} />
-        <Button type="primary" onClick={()=>update({...page.current,...searchValue})} icon={<SearchOutlined />}>查询</Button>
+        <Button type="primary" onClick={()=>update({period:[searchValue.begin,searchValue.end],hostid:selected.hostid})} icon={<SearchOutlined />}>查询</Button>
         <Button style={{marginLeft:12}} onClick={()=>expGraph()} icon={<DownloadOutlined />}>导出</Button>
       </div>
       <div className="table-wrap">
