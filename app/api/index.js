@@ -1,8 +1,9 @@
-import {utils} from '@common';
-const {sleep,wrapPromise}=utils;
 import React from 'react';
 import { UserOutlined, PoweroffOutlined } from '@ant-design/icons';
 import fetcher from './fetcher';
+
+import {utils} from '@common';
+const {sleep,wrapPromise}=utils;
 
 import avatar from '@app/assets/images/user.gif';
 

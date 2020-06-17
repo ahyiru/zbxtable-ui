@@ -22,7 +22,7 @@ const Main=props=>{
   return <div className="frame-container">
     {
       hasMenu?<aside className={`frame-aside${showMenu}`}>
-        <Menu menu={menu} inputPath={inputPath} />
+        <Menu menu={menu} inputPath={inputPath} collapsed={!!showMenu} />
       </aside>:null
     }
     <div className={`frame-view${showMenu}`} style={style}>

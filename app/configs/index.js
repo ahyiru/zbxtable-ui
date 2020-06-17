@@ -1,6 +1,6 @@
 import {utils} from '@common';
 
-const {session}=utils;
+const {storage}=utils;
 
 // const browserRouter=!process.env.isDev;
 export const title='运维管理平台';
@@ -9,17 +9,17 @@ export const title='运维管理平台';
 export const baseUrl='';//'riskWarning';
 
 const beforeRender=input=>{
-  const token=session.get('token');
+  const token=storage.get('token');
   if(!token){
-    return {path:'/lock'};
+    return {path:'/user/login'};
   }
 };
 
 export const routerCfg={
   browserRouter:true,
-  title:'',
+  title,
   // errorBoundary:false,
-  // beforeRender,
+  beforeRender,
 };
 
 export const themeList=[

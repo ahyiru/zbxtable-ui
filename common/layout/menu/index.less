@@ -1,32 +1,38 @@
-@import '~@app/assets/reset.less';
-@import "../frame/config.less";
-
-.loop-tree(@pl,@size,@level:1) when (@level < 6){
-  >li{
-    >a{
-      padding-left:@pl;
-      // background:linear-gradient(to bottom,lighten(@bgcolor,1),@bgcolor);
-      // background:linear-gradient(to bottom,@menuBgColor,hsla(0,0%,0%,.01));
-      font-size:@size;
-      /*>i{
-        font-size:@size;
-      }*/
-    }
-    >ul{
-      background-color:hsla(0,0%,0%,.03);
-      box-shadow:0 1px 4px rgba(0,0,0,0.08) inset;
-      // .loop-tree(darken(@bgcolor,8),(@pl + 20),(@size - 4),(@level + 1));
-      .loop-tree((@pl + 15),(@size - 0.2),(@level + 1));
-    }
-  }
-  // background-color:hsla(0,0%,0%,.12);
-  // background-color:@bgcolor;
-}
+@import '~@common/styles/common.less';
+@import '~@layout/frame/config.less';
 
 @menuItemHeight:45px;
 @subMenuItemHeight:40px;
-@menuIconWidth:38px;
+@menuLeftIconWidth:38px;
+@menuRightIconWidth:20px;
 @menuDownBar:0px;
+
+.loop-tree1(@pl,@size,@level:1) when (@level < 6){
+  >li{
+    >a{
+      padding-left:@pl;
+      font-size:@size;
+    }
+    >ul{
+      box-shadow:0 1px 4px rgba(0,0,0,0.08) inset;
+      background-color:hsla(0,0%,0%,.03);
+      .loop-tree1((@pl + 16),(@size - 0.2),(@level + 1));
+    }
+  }
+}
+.loop-tree(@pl,@size,@bgcolor,@level:1) when (@level < 6){
+  >li{
+    >a{
+      padding-left:@pl;
+      font-size:@size;
+    }
+    >ul{
+      box-shadow:0 1px 4px rgba(0,0,0,0.08) inset;
+      background-color:@bgcolor;
+      .loop-tree((@pl + 18),(@size - 0.1),darken(@bgcolor,8),(@level + 1));
+    }
+  }
+}
 
 .menu{
   background-color:@menuBgColor;
@@ -36,132 +42,142 @@
     height:calc(100% - @menuDownBar);
     overflow:auto;
     padding:10px 0;
-    .loop-tree(10px,1.5rem);
-    >li{
-      >a{
-        background:linear-gradient(to bottom,hsla(0,0%,0%,0),@deepMenuBgColor);
-      }
-      li{
-        // height:@subMenuItemHeight;
-        a{
-          height:@subMenuItemHeight;
-          line-height:@subMenuItemHeight;
-          i,.anticon{
-            height:@subMenuItemHeight;
-            line-height:@subMenuItemHeight;
+    .loop-tree1(6px,1.5rem);
+    li{
+      user-select:none;
+      position:relative;
+      &[has-children="true"]{
+        >a{
+          &.active{
+            &::after{
+              display:none;
+            }
           }
         }
       }
-    }
-    li{
-      user-select:none;
       >a{
+        .follow-vertical();
         position:relative;
         display:block;
-        height:@menuItemHeight;
-        line-height:@menuItemHeight;
+        height:@subMenuItemHeight;
+        line-height:@subMenuItemHeight;
         text-decoration:none;
         // border-bottom:1px solid #888;
-        // color:#666;
-        // font-size:16px;
-        transition:.2s color;
-        &.open{
-          color:#3498db;//@linkActiveColor;
-        }
+        transition:all .3s;
         &.active{
           background-color:hsla(0,0%,0%,.02);
           // background-color:#435466;
           // color:@linkActiveColor;
-
-          /*background-color: rgba(240, 249, 249, 0.1);
-          border: 1px solid #90bade;
-          border-left: 0;
-          &::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background-color: #3a8bca;
-          }
-          &::after {
-            content: '';
-            position: absolute;
-            left: 4px;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background: rgba(75, 147, 206, 0.19);
-          }*/
         }
         &:hover{
           // background-color:hsla(0,0%,0%,.04);
           // background-color:#435466;
           color:@linkHoverColor;
         }
-        i,.anticon{
+        i,.iico,.anticon{
           display:block;
           position:absolute;
           top:0;
-          width:@menuIconWidth;
-          height:@menuItemHeight;
-          line-height:@menuItemHeight;
+          width:@menuLeftIconWidth;
+          height:@subMenuItemHeight;
+          line-height:@subMenuItemHeight;
           text-align:center;
-          // font-size:20px;
-          +span{
-            padding-left:@menuIconWidth;
+          +.txt{
+            padding-left:@menuLeftIconWidth;
           }
         }
-        span{
+        .txt{
           display:block;
           padding:0 10px;
           overflow:hidden;
           text-overflow:ellipsis;
           white-space:nowrap;
           &.has-right-icon{
-            padding-right:30px;
+            padding-right:@menuRightIconWidth + 5px;
           }
-          +i{
+          +.coll-ico{
+            .angle-bt(6px);
+            position:absolute;
             right:0;
-            width:28px;
+            width:@menuRightIconWidth;
           }
         }
       }
-      >ul{
-        // display:none;
-        // padding:8px 0;
-        min-height:0;
-        max-height:0;
-        overflow:hidden;
-        &.open{
-          animation:ani-fade-in .3s ease-in forwards;
+      &.open{
+        >a{
+          .coll-ico{
+            .angle-top(6px);
+            position:absolute;
+            width:@menuRightIconWidth;
+          }
+        }
+      }
+    }
+    >li{
+      >a{
+        // background:linear-gradient(to bottom,hsla(0,0%,0%,0),@deepMenuBgColor);
+        background:linear-gradient(to bottom,@menuBgColor,@deepMenuBgColor);
+        height:@menuItemHeight;
+        line-height:@menuItemHeight;
+        i,.iico,.anticon{
+          height:@menuItemHeight;
+          line-height:@menuItemHeight;
         }
       }
     }
   }
 }
 
-@keyframes ani-fade-in{
-  0% {
-    min-height: 0;
-    max-height: 0;
-    display: none;
-  }
-  1% {
-    min-height: 0;
-    max-height: 0;
-    display: block;
-  }
-  99% {
-    min-height:none;
-    max-height:50em;
-    display: block;
-  }
-  100% {
-    min-height:none;
-    max-height:none;
-    display: block;
+@media screen and (min-width:1024px){
+  .frame-aside.showMenu{
+    .menu{
+      >.tree-root{
+        overflow:visible;
+        li{
+          >a{
+            padding-left:0px;
+          }
+          >ul{
+            .arrow-tl(@menuBgColor,#f0f0f0,6px,10px);
+            position:absolute;
+            top:0;
+            left:calc(100% + 2px);
+            width:@collapseMenuWidth;
+            background-color:@menuBgColor;
+            opacity:.97;
+            transform:scale(0);
+            transform-origin:0 0;
+            transition: .3s transform;
+          }
+          &:hover{
+            >a{
+              .coll-ico{
+                .angle-top(6px);
+                position:absolute;
+                width:@menuRightIconWidth;
+              }
+            }
+            >ul{
+              transform:scale(1);
+              transition: .3s transform;
+            }
+          }
+        }
+        >li{
+          >a{
+            .txt{
+              display:none;
+            }
+            .coll-ico{
+              display:none !important;
+            }
+            i,.iico,.anticon{
+              width:@collapseWidth;
+            }
+          }
+        }
+      }
+    }
   }
 }
 

@@ -1,7 +1,6 @@
 import React,{useEffect} from 'react';
 import { Form, Input, Button, Checkbox, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import {validPasswd} from './api';
 import {loginFn} from '@app/api/api';
 import {utils} from '@common';
 
@@ -28,16 +27,6 @@ const Index=props=>{
       storage.set('token',data.token);
       props.router.push('/');
     }
-  };
-  const handleValid=async value=>{
-    const result=(await validPasswd({passwd:value})).data;
-    if(!result){
-      message.error('验证失败，请重新输入密码！');
-      return;
-    }
-    // message.success('验证成功！');
-    session.set('token',+new Date());
-    props.router.push('/');
   };
   
   return <div className={styles.page}>

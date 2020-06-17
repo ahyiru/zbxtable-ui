@@ -6,11 +6,11 @@ const {storage}=utils;
 
 import { UserOutlined, PoweroffOutlined } from '@ant-design/icons';
 
-import {Link} from '@common';
-
 import {title,themeList} from '@app/configs';
 
 import {logoutFn} from '@app/api/api';
+
+import HoriMenu from './horiMenu';
 
 import './index.less';
 
@@ -30,10 +30,12 @@ const navDrop=[
 const Header=props=>{
   const {collapseMenu,menu,user,theme}=props;
   const userInfo=user?.data??{};
+
   const [showNav,setShowNav]=useState(false);
   const [showTheme,setShowTheme]=useState(false);
   const [showMenu,setShowMenu]=useState(false);
   const [selected,setSelected]=useState(theme);
+
   useEffect(()=>{
     const navListeners=()=>{
       setShowNav(false);
@@ -96,14 +98,14 @@ const Header=props=>{
           <li className="collapseMenu" onClick={e=>toggleMenu(e)}>
             <a>
               {/* <i className="icon-navicon" /> */}
-              <span className="anion">
+              <span className="anico">
                 <span className={`hline${showMenu?' right':''}`} />
               </span>
             </a>
           </li>
           <li>
             <a onClick={e=>switchTheme(e)}>主题</a>
-            <ul className={`lt ${showTheme?'show':''}`}>
+            <ul className={`huxy-arrow-lt${showTheme?' show':''}`}>
               {
                 themeList.map(v=><li key={v.key}>
                   <a className={selected===v.key?'active':''} onClick={()=>selectedTheme(v)}>
@@ -114,27 +116,28 @@ const Header=props=>{
             </ul>
           </li>
           {
-            menu.map(v=><li key={v.path}><Link path={v.path} className={v.active?'active':''}>
+            /* menu.map(v=><li key={v.path}><Link path={v.path} className={v.active?'active':''}>
               {v.icon}
               <span className="menu-title">{v.name}</span>
-            </Link></li>)
+            </Link></li>) */
           }
         </ul>
+        {/* <HoriMenu menu={menu} /> */}
         <ul className="nav-right">
           <li>
             <a onClick={e=>toggleNav(e)}>
               <div className="avatar">
                 <img className="usr" src={userInfo?.avatar} alt="user" />
-                <span>{userInfo?.username}</span>
-                <i className={`ivu-angle ${showNav?'top':'bottom'}`}/>
+                <span>{userInfo?.username??'admin'}</span>
+                <i className={`huxy-angle-${showNav?'top':'bt'}`}/>
               </div>
             </a>
-            <ul className={`rt ${showNav?'show':''}`}>
+            <ul className={`huxy-arrow-rt${showNav?' show':''}`}>
               {
                 navDrop.map(v=><li key={v.name}>
-                  <a onClick={()=>handleNavClick(v)}>
+                  <a onClick={()=>handleNavClick(v)} className={v.active?'active':''}>
                     {v.icon}
-                    <span className="menu-title">{v.name}</span>
+                    <span className="drop-label">{v.name}</span>
                   </a>
                 </li>)
               }

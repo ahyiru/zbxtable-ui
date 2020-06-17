@@ -13,7 +13,7 @@ const routers=[
   {
     path:'/',
     redirect:'/dashboard',
-    component:()=>import('@common/layout/frame'),
+    component:()=>import('@common/layout'),
     resolve:{
       user:()=>getInfo({token:storage.get('token')}),
     },

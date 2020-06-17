@@ -207,6 +207,7 @@ module.exports={
     alias:{
       '@app':app,
       '@common':path.resolve(__dirname, '../common'),
+      '@layout':path.resolve(__dirname, '../common/layout'),
       '@utils':path.resolve(app, 'utils'),
     },
     extensions:['.js','.mjs','.cjs','.jsx','.ts','.tsx','.json','.css','.less','.vue','.vuex'],

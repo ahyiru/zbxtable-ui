@@ -1,9 +1,8 @@
 import React,{useEffect,useCallback,useRef,useState} from 'react';
 import { Button, Table, Tooltip, message,Input,Tag, DatePicker } from 'antd';
 import { EditOutlined,DeleteOutlined,PlusOutlined, SearchOutlined,DownloadOutlined } from '@ant-design/icons';
-import {use} from '@common';
+import {use,utils} from '@common';
 const {useAsync}=use;
-import {utils} from '@common';
 const {formatTime,dlfile}=utils;
 import {getAlarm,exportAlarm} from '@app/api/api';
 

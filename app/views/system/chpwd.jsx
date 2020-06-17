@@ -105,7 +105,8 @@ const Index=props=>{
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit" className="login-form-button">确认修改</Button>
-          <Button style={{marginLeft:'12px'}} onClick={()=>form.resetFields()}>重置</Button>
+          {/* <Button style={{marginLeft:'12px'}} onClick={()=>form.resetFields()}>重置</Button> */}
+          <Button style={{marginLeft:'12px'}} onClick={()=>form.setFieldsValue({oldpwd:'',password:'',confirm:''})}>重置</Button>
         </Form.Item>
       </Form>
     </div>

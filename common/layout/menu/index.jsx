@@ -1,51 +1,117 @@
 import React from 'react';
 
-const {useState,useEffect}=React;
+const {useState,useEffect,useRef}=React;
 
-import {Link} from '@common';
+import {Link,utils,use} from '@common';
+
+const {getSelected,uuidv4}=utils;
+
+const {useWinResize}=use;
 
 import './index.less';
 
-const render=(menu,toggle)=>{
-  return menu.map(v=>{
+const ulStyles={
+  overflow:'hidden',
+  maxHeight:'var(--ul-max-height)',
+  transition:'max-height .3s',
+};
+
+const RenderChild=({item,children})=>{
+  const {open,uuid}=item;
+  const ul=useRef();
+  const isInit=useRef(true);
+  useEffect(()=>{
+    const el=ul.current;
+    if(isInit.current){
+      const el=ul.current;
+      const height=open?`${el.scrollHeight}px`:'0px';
+      // el.style.transition='none';
+      el.style.setProperty('--ul-max-height',height);
+      isInit.current=false;
+    }else{
+      const initH=open?'0px':`${el.scrollHeight}px`;
+      el.style.setProperty('--ul-max-height',initH);
+      setTimeout(()=>{
+        const height=open?`${el.scrollHeight}px`:'0px';
+        // el.style.transition='';
+        el.style.setProperty('--ul-max-height',height);
+      },5);
+    }
+  },[open]);
+  useEffect(()=>{
+    if(uuid){
+      const el=ul.current;
+      el.style.setProperty('--ul-max-height','none');
+    }
+  },[uuid]);
+  return <ul ref={ul} style={ulStyles}>{children}</ul>;
+};
+
+const render=(data,toggle)=>{
+  return data.map(v=>{
     const hasChildren=v.children&&v.children.length;
     const active=v.active?'active':'';
     if(hasChildren){
-      return <li key={v.name} onClick={e=>toggle(e,v)} /* style={{height:v.height}} */>
+      return <li key={v.name} onClick={e=>toggle(e,v)} has-children="true" className={v.open?'open':''}>
         <Link path={v.path} className={active} preventDefault>
-          {v.icon?v.icon:null}
-          <span className="has-right-icon">{v.name}</span>
-          <i className={`ivu-angle ${v.open?'top':'bottom'}`} />
+          {typeof v.icon==='string'?<i className={v.icon} />:(v.icon||null)}
+          <span className="txt has-right-icon">{v.name}</span>
+          <i className="coll-ico" />
         </Link>
-        <ul className={v.open?'open':''}>{render(v.children,toggle)}</ul>
+        <RenderChild item={v}>{render(v.children,toggle)}</RenderChild>
       </li>;
     }
     return <li key={v.name}>
       <Link path={v.path} stopPropagation className={active}>
-        {v.icon?v.icon:null}
-        <span>{v.name}</span>
+        {typeof v.icon==='string'?<i className={v.icon} />:(v.icon||null)}
+        <span className="txt">{v.name}</span>
+      </Link>
+    </li>;
+  });
+};
+
+const renderCollapsed=data=>{
+  return data.map(v=>{
+    const hasChildren=v.children&&v.children.length;
+    const active=v.active?'active':'';
+    if(hasChildren){
+      return <li key={v.name} has-children="true">
+        <Link path={v.path} className={active} preventDefault>
+          {typeof v.icon==='string'?<i className={v.icon} />:(v.icon||null)}
+          <span className="txt has-right-icon">{v.name}</span>
+          <i className="coll-ico" />
+        </Link>
+        <ul>{renderCollapsed(v.children)}</ul>
+      </li>;
+    }
+    return <li key={v.name}>
+      <Link path={v.path} stopPropagation className={active}>
+        {typeof v.icon==='string'?<i className={v.icon} />:(v.icon||null)}
+        <span className="txt">{v.name}</span>
       </Link>
     </li>;
   });
 };
 
 const Menu=props=>{
-  const [menu,setMenu]=useState(props.menu);
+  const {menu,collapsed}=props;
+  const {width}=useWinResize();
+  const [data,setData]=useState(menu);
   useEffect(()=>{
-    setMenu(props.menu);
-  },[props]);
+    setData(menu);
+  },[menu]);
   const toggle=(e,v)=>{
     e.stopPropagation();
     v.open=!v.open;
-    // const{height}=e.currentTarget.firstChild.getBoundingClientRect();
-    // const {scrollHeight}=e.currentTarget;
-    // v.height=v.open?`${scrollHeight}px`:`${height}px`;
-    setMenu([...menu]);
+    const selecteds=getSelected(data,v.path,'path');
+    const psel=selecteds.slice(0,-1);
+    psel.map(item=>item.uuid=uuidv4());
+    setData([...data]);
   };
 
   return <div className="menu">
     <ul className="tree-root">
-      {render(menu,toggle)}
+      {(collapsed&&width>1024)?renderCollapsed(data):render(data,toggle)}
     </ul>
   </div>;
 };

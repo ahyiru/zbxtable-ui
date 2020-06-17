@@ -1,5 +1,4 @@
-@import '~@app/assets/reset.less';
-
+@import "./global.less";
 @import "./config.less";
 
 @borderShadow:0 0 6px 1px rgba(0,0,0,0.06);
@@ -36,10 +35,17 @@
     left:0;//@menuWidth;
     right:0;
     z-index:2;
-    transition:left .3s;
-    &.showMenu{
-      left:0;
+    .footer{
+      background-color:@footerBgColor;
+      max-width:@maxWidth;
+      padding-left:@menuWidth;
       transition:left .3s;
+    }
+    &.showMenu{
+      .footer{
+        padding-left:@collapseWidth;
+        transition:left .3s;
+      }
     }
   }
   .frame-main{
@@ -52,17 +58,18 @@
     .frame-container{
       position:relative;
       .frame-aside{
-        width:@menuWidth;
         position:fixed;
-        left:calc(50% - @maxWidth/2);
+        width:@menuWidth;
+        // left:calc(50% - @maxWidth/2);
         top:@topHeight;
         bottom:0;
         z-index:5;
         color:@appColor;
-        transition:left .3s;
+        transition:width .3s;
         &.showMenu{
-          left:calc(0px - @menuWidth);
-          transition:left .3s;
+          // left:calc(@collapseWidth - @menuWidth);
+          width:@collapseWidth;
+          transition:width .3s;
         }
       }
       .frame-view{
@@ -70,7 +77,7 @@
         min-height:calc(100vh - @footerHeight - @topHeight);
         transition:padding-left .3s;
         &.showMenu{
-          padding-left:0;
+          padding-left:@collapseWidth;
           transition:padding-left .3s;
         }
       }
@@ -97,7 +104,7 @@
     .frame-main{
       .frame-container{
         .frame-aside{
-          left:0;
+          // left:0;
         }
       }
     }
@@ -109,41 +116,32 @@
     .frame-main{
       .frame-container{
         .frame-aside{
-          left:calc(0px - @menuWidth);
+          // left:calc(0px - @menuWidth);
+          width:0;
           &.showMenu{
-            left:0;
+            // left:0;
+            width:@menuWidth;
           }
         }
         .frame-view{
-          padding-left:@collapseMenuWidth;
+          padding-left:0;
+          &.showMenu{
+            padding-left:0;
+          }
         }
       }
     }
     .frame-footer{
-      left:0;
+      .footer{
+        padding-left:0;
+      }
+      &.showMenu{
+        .footer{
+          padding-left:0;
+        }
+      }
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

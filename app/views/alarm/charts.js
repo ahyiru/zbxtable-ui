@@ -23,7 +23,7 @@ export const opt1=[
     label:'低风险',
   },
 ];
-const color=['#1890ff','#faad14','#ff4d4f'];
+const color=['#1890ff','#faad14','#fa8c16','#ff4d4f'];
 
 export const option = ops => ({
   title: {

@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect,useMemo} from 'react';
 
 import Header from '../header';
 // import Topbar from '../topbar';
@@ -17,11 +17,11 @@ const horizonMenu=menu=>menu.filter(v=>v.name).map(v=>{
   return firstLevel;
 });
 
-const aa='.frame.dark';
+const sidebarMenu=menu=>menu.find(v=>v.active)?.children??menu[0].children;
 
 const Frame=props=>{
 
-  const {menu,theme:theme1}=props;
+  const {menu}=props;
 
   const [showMenu,setShowMenu]=useState(false);
 
@@ -39,13 +39,17 @@ const Frame=props=>{
 
   const showMenuCls=showMenu?' showMenu':'';
 
+  const navMenu=horizonMenu(menu||[])||[];
+
+  const sideMenu=sidebarMenu(menu||[])||[];
+
   return <div className={`frame ${theme}`}>
     <header className="frame-header">
       {/* <Topbar menu={horizonMenu(menu[0].children||[])} user={user} /> */}
-      <Header {...props} menu={horizonMenu(menu||[])} collapseMenu={collapseMenu} theme={theme} switchTheme={switchTheme} />
+      <Header {...props} menu={navMenu} collapseMenu={collapseMenu} theme={theme} switchTheme={switchTheme} />
     </header>
     <main className="frame-main">
-      <Main {...props} showMenu={showMenuCls} menu={menu[0].children||[]} />
+      <Main {...props} showMenu={showMenuCls} menu={sideMenu} />
     </main>
     <footer className={`frame-footer${showMenuCls}`}>
       <Footer />

@@ -1,14 +1,12 @@
 import React,{useEffect,useCallback,useRef,useState} from 'react';
 import { Button, Table, Tooltip, message,Row,Col,Tabs,Badge,Menu,Dropdown } from 'antd';
 import { CloudServerOutlined,BarChartOutlined,BugOutlined,AlertOutlined,RedoOutlined } from '@ant-design/icons';
-import {use} from '@common';
+import {use,utils,components} from '@common';
 const {useAsync}=use;
-import {utils} from '@common';
 const {formatTime,formatNum}=utils;
+const {TabHeader}=components;
 
 import {getIndex,getTrigger} from '@app/api/api';
-
-import TabHeader from '@common/components/tabHeader';
 
 import './index.less';
 
