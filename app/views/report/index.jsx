@@ -117,6 +117,8 @@ const Index=props=>{
     end:formatTime(initDate),
   });
   const [selecteds,setSelecteds]=useState({});
+  const [detailLoading,setDetailLoading]=useState(false);
+  const [trendLoading,setTrendLoading]=useState(false);
   const page=useRef({page:1,limit:10});
   const update=useCallback(params=>updateList({group:getList(params)}),[]);
   const updateSub=useCallback(params=>updateList({subList:getSubList(params)}),[]);
@@ -146,7 +148,7 @@ const Index=props=>{
     const hostList=subList?.data??{items:[]};
     const {items:host}=hostList;
     const hosts=host[0]?.hosts;
-    const selItem=hosts.find(v=>v.hostid===value);
+    const selItem=(hosts||[]).find(v=>v.hostid===value);
     if(value){
       updateTarget(selItem);
       setSelecteds({
@@ -172,16 +174,18 @@ const Index=props=>{
     const targetList=target?.data??{};
     const {items:targets}=targetList;
 
-    const selHosts=hosts.find(v=>v.hostid===selecteds.host);
-    const selItems=targets.find(v=>v.itemid===selecteds.item);
+    const selHosts=(hosts||[]).find(v=>v.hostid===selecteds.host);
+    const selItems=(targets||[]).find(v=>v.itemid===selecteds.item);
 
     const data={host:selHosts,item:selItems,period:[searchValue.begin,searchValue.end]};
+    setDetailLoading(true);
     const {result,fileInfo}=await exportHistory(data);
     if(result){
       const name=fileInfo.split(';')[1]?.split('=')[1]??'data.xlsx';
       dlfile(result,name);
       message.success('导出成功！');
     }
+    setDetailLoading(false);
   };
   const dlTrend=async ()=>{
     const hostList=subList?.data??{items:[]};
@@ -190,16 +194,18 @@ const Index=props=>{
     const targetList=target?.data??{};
     const {items:targets}=targetList;
 
-    const selHosts=hosts.find(v=>v.hostid===selecteds.host);
-    const selItems=targets.find(v=>v.itemid===selecteds.item);
+    const selHosts=(hosts||[]).find(v=>v.hostid===selecteds.host);
+    const selItems=(targets||[]).find(v=>v.itemid===selecteds.item);
 
     const data={host:selHosts,item:selItems,period:[searchValue.begin,searchValue.end]};
+    setTrendLoading(true);
     const {result,fileInfo}=await exportTrend(data);
     if(result){
       const name=fileInfo.split(';')[1]?.split('=')[1]??'data.xlsx';
       dlfile(result,name);
       message.success('导出成功！');
     }
+    setTrendLoading(false);
   };
   
   const {group,subList,target}=list;
@@ -233,8 +239,8 @@ const Index=props=>{
         }
       </Select>
       <RangePicker showTime placeholder={['请选择开始时间','请选择结束时间']} value={rt} onChange={(moment,str)=>setSearchValue({begin:str[0],end:str[1]})} style={{marginRight:'15px'}} />
-      <Button type="primary" onClick={()=>dlDetail()} icon={<SearchOutlined />} style={{ marginRight: 10 }}>导出详情</Button>
-      <Button type="primary" onClick={()=>dlDetail()} icon={<SearchOutlined />}>导出趋势</Button>
+      <Button type="primary" loading={detailLoading} onClick={()=>dlDetail()} icon={<SearchOutlined />} style={{ marginRight: 10 }}>导出详情</Button>
+      <Button type="primary" loading={trendLoading} onClick={()=>dlTrend()} icon={<SearchOutlined />}>导出趋势</Button>
     </div>
     {/* <div className="table-wrap">
       <Table

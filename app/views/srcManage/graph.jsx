@@ -113,6 +113,7 @@ const Index=props=>{
     begin:formatTime(new Date(initDate-1000*60*60*24*7)),
     end:formatTime(initDate),
   });
+  const [loading,setLoading]=useState(false);
   const selHost=useRef([]);
   // const page=useRef({current:1,size:10});
   const page=useRef({page:1,limit:10});
@@ -160,16 +161,17 @@ const Index=props=>{
     });
   };
   const expGraph=async ()=>{
+    setLoading(true);
     const {result,fileInfo}=await exportGraph({
       period:[searchValue.begin,searchValue.end],
       hostids:selHost.current,
     });
     if(result){
-      console.log(23321,result);
       const name=fileInfo.split(';')[1]?.split('=')[1]??'data.xlsx';
       dlfile(result,name);
       message.success('导出成功！');
     }
+    setLoading(false);
   };
   /* const handleEdit=async item=>{
     const {data,msg}=await editItem(item);
@@ -213,7 +215,7 @@ const Index=props=>{
       <div className="search-bar">
         <RangePicker showTime value={[moment(searchValue.begin),moment(searchValue.end)]} onChange={(moment,str)=>setSearchValue({begin:str[0],end:str[1]})} style={{marginRight:'15px'}} />
         <Button type="primary" onClick={()=>update({period:[searchValue.begin,searchValue.end],hostid:selected.hostid})} icon={<SearchOutlined />}>查询</Button>
-        <Button style={{marginLeft:12}} onClick={()=>expGraph()} icon={<DownloadOutlined />}>导出</Button>
+        <Button style={{marginLeft:12}} loading={loading} onClick={()=>expGraph()} icon={<DownloadOutlined />}>导出</Button>
       </div>
       <div className="table-wrap">
         <Row gutter={[12,12]}>

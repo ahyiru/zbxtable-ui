@@ -108,6 +108,7 @@ const columns=(page,handler={})=>[
 ];
 
 const Index=props=>{
+  const [alarmLoading,setAlarmLoading]=useState(false);
   const [list,updateList]=useAsync({});
   const initDate=new Date();
   const [searchValue,setSearchValue]=useState({
@@ -131,6 +132,7 @@ const Index=props=>{
     });
   };
   const expAlarm=async ()=>{
+    setAlarmLoading(true);
     const {result,fileInfo}=await exportAlarm({
       ...searchValue,
       ...page.current,
@@ -141,6 +143,7 @@ const Index=props=>{
       dlfile(result,name);
       message.success('导出成功！');
     }
+    setAlarmLoading(false);
   };
   /* const handleEdit=async item=>{
     const {data,msg}=await editItem(item);
@@ -160,7 +163,7 @@ const Index=props=>{
       {/* <Search placeholder="请输入主机名" onSearch={searchList} enterButton style={{width:'200px',marginRight:'15px'}} /> */}
       <RangePicker showTime value={[moment(searchValue.begin),moment(searchValue.end)]} onChange={(moment,str)=>setSearchValue({begin:str[0],end:str[1]})} style={{marginRight:'15px'}} />
       <Button type="primary" onClick={()=>update({...page.current,...searchValue})} icon={<SearchOutlined />}>查询</Button>
-      <Button style={{marginLeft:12}} onClick={()=>expAlarm()} icon={<DownloadOutlined />}>导出</Button>
+      <Button style={{marginLeft:12}} loading={alarmLoading} onClick={()=>expAlarm()} icon={<DownloadOutlined />}>导出</Button>
     </div>
     <div className="table-wrap">
       <Table

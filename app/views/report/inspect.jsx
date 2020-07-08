@@ -110,6 +110,7 @@ const columns=(page,handler={})=>[
 ];
 
 const Index=props=>{
+  const [reportLoading,setReportLoading]=useState(false);
   const [list,updateList]=useAsync({});
   const initDate=new Date();
   const [searchValue,setSearchValue]=useState({
@@ -139,13 +140,15 @@ const Index=props=>{
     const groupList=group?.data??{};
     const {items,total}=groupList;
 
-    const selGroup=items.find(v=>v.groupid===selecteds.group);
+    const selGroup=(items||[]).find(v=>v.groupid===selecteds.group);
+    setReportLoading(true);
     const {result,fileInfo}=await exportInspect(selGroup);
     if(result){
       const name=fileInfo.split(';')[1]?.split('=')[1]??'data.xlsx';
       dlfile(result,name);
       message.success('导出成功！');
     }
+    setReportLoading(false);
   };
   
   const {group}=list;
@@ -159,7 +162,7 @@ const Index=props=>{
           (items||[]).map(v=><Option key={v.groupid} value={v.groupid}>{v.name}</Option>)
         }
       </Select>
-      <Button type="primary" onClick={()=>dlReport()} icon={<SearchOutlined />}>导出巡检报告</Button>
+      <Button type="primary" loading={reportLoading} onClick={()=>dlReport()} icon={<SearchOutlined />}>导出巡检报告</Button>
     </div>
     {/* <div className="table-wrap">
       <Table

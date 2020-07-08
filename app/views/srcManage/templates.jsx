@@ -156,7 +156,7 @@ const Index=props=>{
   return <div className="host-list-page">
     <div className="search-bar">
       <Search placeholder="请输入主机名" onSearch={searchList} enterButton style={{width:'200px',marginRight:'15px'}} />
-      <Button type="primary" /* onClick={()=>handleEdit()} */ icon={<PlusOutlined />}>添加主机</Button>
+      {/* <Button type="primary" icon={<PlusOutlined />}>添加主机</Button> */}
     </div>
     <div className="table-wrap">
       <Table

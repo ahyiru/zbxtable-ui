@@ -9,6 +9,21 @@ import './index.less';
 
 const {Search}=Input;
 
+const available=[
+  {
+    value:'未知',
+    color:'yellow',
+  },
+  {
+    value:'正常',
+    color:'green',
+  },
+  {
+    value:'异常',
+    color:'red',
+  },
+];
+
 const columns=(page,handler={})=>[
   {
     title: '序号',
@@ -62,11 +77,11 @@ const columns=(page,handler={})=>[
   },
   {
     title: '监控状态',
-    dataIndex: 'status',
+    dataIndex: 'available',
     width: 40,
     ellipsis: true,
     align:'center',
-    render:(text,row,index)=>text=='0'?<Tag color="green">正常</Tag>:<Tag color="red">不正常</Tag>,
+    render:(text,row,index)=><Tooltip title={row.error}><Tag color={available[text-0].color}>{available[text-0].value}</Tag></Tooltip>,
   },
   /* {
     title: '操作',
@@ -125,7 +140,7 @@ const Index=props=>{
   return <div className="host-list-page">
     <div className="search-bar">
       <Search placeholder="请输入主机名" onSearch={searchList} enterButton style={{width:'200px',marginRight:'15px'}} />
-      <Button type="primary" /* onClick={()=>handleEdit()} */ icon={<PlusOutlined />}>添加主机</Button>
+      {/* <Button type="primary" icon={<PlusOutlined />}>添加主机</Button> */}
     </div>
     <div className="table-wrap">
       <Table
