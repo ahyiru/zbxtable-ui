@@ -161,7 +161,7 @@ const Index=props=>{
   return <div className="alarm-analysis-page">
     <div className="search-bar">
       {/* <Search placeholder="请输入主机名" onSearch={searchList} enterButton style={{width:'200px',marginRight:'15px'}} /> */}
-      <RangePicker showTime value={[moment(searchValue.begin),moment(searchValue.end)]} onChange={(moment,str)=>setSearchValue({begin:str[0],end:str[1]})} style={{marginRight:'15px'}} />
+      <RangePicker showTime value={[moment(searchValue.begin),moment(searchValue.end)].filter(Boolean)} onChange={(moment,str)=>setSearchValue({begin:str[0],end:str[1]})} style={{marginRight:'15px'}} />
       <Button type="primary" onClick={()=>update({...page.current,...searchValue})} icon={<SearchOutlined />}>查询</Button>
       <Button style={{marginLeft:12}} loading={alarmLoading} onClick={()=>expAlarm()} icon={<DownloadOutlined />}>导出</Button>
     </div>

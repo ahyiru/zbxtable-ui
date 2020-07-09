@@ -3,7 +3,7 @@ import { Button, Table, Tooltip, message,Input,Tag, DatePicker,Row,Col } from 'a
 import { EditOutlined,DeleteOutlined,PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import {use,utils} from '@common';
 const {useAsync}=use;
-const {formatTime}=utils;
+const {formatTime,sort}=utils;
 import {listAnalysis} from '@app/api/api';
 
 import moment from 'moment';
@@ -149,6 +149,10 @@ const Index=props=>{
   const analysisList=analysis?.data??{};
   const {host,host_count,level,level_count}=analysisList;
   const time=`${searchValue.begin}至${searchValue.end}`;
+  const hostOpt=sort((host_count||[]).map((v,k)=>({
+    legend:host[k],
+    data:v,
+  })),'data');
   return <div className="alarm-analysis-page">
     <div className="search-bar">
       {/* <Search placeholder="请输入主机名" onSearch={searchList} enterButton style={{width:'200px',marginRight:'15px'}} /> */}
@@ -161,7 +165,7 @@ const Index=props=>{
           <ReactEcharts className="charts-pannel" option={option({legend:level,data:level_count,time})} />
         </Col>
         <Col span={12}>
-          <ReactEcharts className="charts-pannel" option={option1({legend:host,data:host_count,time})} />
+          <ReactEcharts className="charts-pannel" option={option1({legend:hostOpt.map(v=>v.legend),data:hostOpt.map(v=>v.data),time})} />
         </Col>
       </Row>
     </div>
