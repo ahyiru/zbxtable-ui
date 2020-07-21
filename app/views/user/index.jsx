@@ -40,7 +40,9 @@ const Index=props=>{
             name="login"
             className="login-form"
             initialValues={{
-              remember: true,
+              // remember: true,
+              username:'admin',
+              password:'Zbxtable',
             }}
             onFinish={onFinish}
           >

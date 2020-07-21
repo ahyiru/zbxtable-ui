@@ -86,10 +86,10 @@ const Index=props=>{
           <Input disabled prefix={<UserOutlined className="site-form-item-icon" style={{marginRight:'7px',color:'#999'}} />} placeholder="用户名" />
         </Form.Item>
         <Form.Item label="原密码" name="oldpwd" rules={[{required: true,message: '请输入原密码!'}]}>
-          <Input prefix={<LockOutlined className="site-form-item-icon" style={{marginRight:'7px',color:'#999'}} />} type="password" placeholder="原密码" />
+          <Input disabled prefix={<LockOutlined className="site-form-item-icon" style={{marginRight:'7px',color:'#999'}} />} type="password" placeholder="原密码" />
         </Form.Item>
         <Form.Item label="新密码" name="password" rules={[{required: true,message: '请输入新密码!'}]}>
-          <Input prefix={<LockOutlined className="site-form-item-icon" style={{marginRight:'7px',color:'#999'}} />} type="password" placeholder="新密码" />
+          <Input disabled prefix={<LockOutlined className="site-form-item-icon" style={{marginRight:'7px',color:'#999'}} />} type="password" placeholder="新密码" />
         </Form.Item>
         <Form.Item label="确认密码" name="confirm" rules={[{required: true,message: '请确认密码!'},
           ({getFieldValue})=>({
@@ -101,12 +101,12 @@ const Index=props=>{
             },
           }),
         ]}>
-          <Input prefix={<LockOutlined className="site-form-item-icon" style={{marginRight:'7px',color:'#999'}} />} type="password" placeholder="确认密码" />
+          <Input disabled prefix={<LockOutlined className="site-form-item-icon" style={{marginRight:'7px',color:'#999'}} />} type="password" placeholder="确认密码" />
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit" className="login-form-button">确认修改</Button>
+          <Button disabled type="primary" htmlType="submit" className="login-form-button">确认修改</Button>
           {/* <Button style={{marginLeft:'12px'}} onClick={()=>form.resetFields()}>重置</Button> */}
-          <Button style={{marginLeft:'12px'}} onClick={()=>form.setFieldsValue({oldpwd:'',password:'',confirm:''})}>重置</Button>
+          {/* <Button style={{marginLeft:'12px'}} onClick={()=>form.setFieldsValue({oldpwd:'',password:'',confirm:''})}>重置</Button> */}
         </Form.Item>
       </Form>
     </div>

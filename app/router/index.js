@@ -124,12 +124,12 @@ const routers=[
         name:'系统管理',
         icon:<ControlOutlined />,
         children:[
-          {
+          /* {
             path:'/license',
             name:'授权信息',
             icon:<AlertOutlined />,
             component:()=>import('../views/system'),
-          },
+          }, */
           {
             path:'/chpwd',
             name:'修改密码',
