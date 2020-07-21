@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserOutlined,ContainerOutlined,ExceptionOutlined, HomeOutlined,ClusterOutlined,DashboardOutlined,CloudServerOutlined,ConsoleSqlOutlined,ControlOutlined,AlertOutlined,AuditOutlined,BellOutlined,GoldOutlined,HddOutlined} from '@ant-design/icons';
+import { DesktopOutlined,ContainerOutlined,DatabaseOutlined, HomeOutlined,AreaChartOutlined,LineChartOutlined,CloudServerOutlined,CloudDownloadOutlined,FileExcelOutlined,AlertOutlined,FundProjectionScreenOutlined,BellOutlined,FundOutlined,SettingOutlined,ToolOutlined} from '@ant-design/icons';
 
 import {utils} from '@common';
 const {storage}=utils;
@@ -43,18 +43,18 @@ const routers=[
         path:'/srcManage',
         redirect:'/srcManage/host',
         name:'资源管理',
-        icon:<AlertOutlined />,
+        icon:<CloudServerOutlined />,
         children:[
           {
             path:'/host',
             name:'主机',
-            icon:<ContainerOutlined />,
+            icon:<DesktopOutlined />,
             component:()=>import('../views/srcManage'),
           },
           {
             path:'/groups',
             name:'主机组',
-            icon:<ContainerOutlined />,
+            icon:<DatabaseOutlined />,
             component:()=>import('../views/srcManage/groups'),
           },
           {
@@ -66,7 +66,7 @@ const routers=[
           {
             path:'/graph',
             name:'图形管理',
-            icon:<ExceptionOutlined />,
+            icon:<AreaChartOutlined />,
             component:()=>import('../views/srcManage/graph'),
           },
         ],
@@ -75,25 +75,25 @@ const routers=[
         path:'/report',
         redirect:'/report/export',
         name:'指标报表',
-        icon:<ClusterOutlined />,
+        icon:<LineChartOutlined />,
         children:[
           {
             path:'/export',
             name:'指标导出',
-            icon:<ExceptionOutlined />,
+            icon:<CloudDownloadOutlined />,
             component:()=>import('../views/report'),
           },
           {
             path:'/inspect',
             name:'巡检报告',
-            icon:<ExceptionOutlined />,
+            icon:<FileExcelOutlined />,
             component:()=>import('../views/report/inspect'),
           },
           {
             path:'/batch',
             name:'批量导出',
             hideMenu:true,
-            icon:<ExceptionOutlined />,
+            icon:<FundProjectionScreenOutlined />,
             component:()=>import('../views/report/batch'),
           },
         ],
@@ -102,12 +102,12 @@ const routers=[
         path:'/alarm',
         redirect:'/alarm/analysis',
         name:'告警报表',
-        icon:<ControlOutlined />,
+        icon:<AlertOutlined />,
         children:[
           {
             path:'/analysis',
             name:'告警分析',
-            icon:<AlertOutlined />,
+            icon:<FundOutlined />,
             component:()=>import('../views/alarm'),
           },
           {
@@ -122,7 +122,7 @@ const routers=[
         path:'/system',
         redirect:'/system/license',
         name:'系统管理',
-        icon:<ControlOutlined />,
+        icon:<SettingOutlined />,
         children:[
           /* {
             path:'/license',
@@ -133,7 +133,7 @@ const routers=[
           {
             path:'/chpwd',
             name:'修改密码',
-            icon:<BellOutlined />,
+            icon:<ToolOutlined />,
             component:()=>import('../views/system/chpwd'),
           },
         ],
